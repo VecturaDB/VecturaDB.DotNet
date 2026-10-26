@@ -1,0 +1,110 @@
+# The tests on the five runners, and on a tag v<version> the publication of the package VecturaDB: Sigstore signature, build
+# provenance, GitHub release and nuget.org with trusted publishing.
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ !startsWith(github.ref, 'refs/tags/') }}
+
+jobs:
+  test:
+    name: Tests on ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-24.04, ubuntu-24.04-arm, macos-latest, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - name: The hashes are the digests of the release of VecturaDB
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 build/check-release.py
+      - name: Tests
+        run: dotnet test tests/VecturaDB.Tests -c Release --logger "console;verbosity=normal"
+      - name: The tool installed from its package
+        shell: bash
+        run: bash build/tool-test.sh
+
+  publish:
+    name: Publish
+    needs: test
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    environment: nuget
+    permissions:
+      attestations: write
+      contents: write
+      id-token: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          dotnet-version: 10.0.x
+
+      - name: The tag is the version of the package, a preview
+        run: |
+          version=$(dotnet msbuild src/VecturaDB -getProperty:Version -nologo)
+          echo "tag $TAG, version $version"
+          test "$TAG" = "v$version"
+          case "$version" in *-preview*) ;; *) echo "only previews for now" >&2; exit 1 ;; esac
+
+      - name: Notices and pack
+        run: |
+          bash build/notices.sh
+          dotnet pack src/VecturaDB -c Release -nologo -p:RequireNotices=true
+          ls -l artifacts/packages
+
+      - name: Attest the build provenance of the package
+        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
+        with:
+          subject-path: artifacts/packages/*.nupkg
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign and collect the provenance
+        run: |
+          mkdir -p out
+          for file in artifacts/packages/*.nupkg; do
+            cosign sign-blob --yes --bundle "$file.sigstore.json" "$file"
+            gh attestation verify "$file" --repo "$GITHUB_REPOSITORY" --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/ci.yml" \
+              --source-ref "refs/tags/$TAG" --format json --jq '.[].attestation.bundle' >> bundles.jsonl
+          done
+          sort -u bundles.jsonl > "out/provenance-$TAG.intoto.jsonl"
+          cp artifacts/packages/*.nupkg artifacts/packages/*.nupkg.sigstore.json out/
+
+      - name: GitHub release
+        run: |
+          version=${TAG#v}
+          vecturadb=$(dotnet msbuild src/VecturaDB -getProperty:VecturaDBTag -nologo)
+          sed -e "s/VECTURADB_VERSION/${vecturadb#v}/g" -e "s/VECTURADB_TAG/$vecturadb/g" -e "s/VERSION/$version/g" build/release-notes.md > notes.md
+          gh release create "$TAG" out/* --repo "$GITHUB_REPOSITORY" --verify-tag --prerelease --title "VecturaDB $version for .NET" --notes-file notes.md
+
+      - name: NuGet login
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Publish to NuGet.org
+        run: dotnet nuget push 'artifacts/packages/*.nupkg' --api-key ${{ steps.login.outputs.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
