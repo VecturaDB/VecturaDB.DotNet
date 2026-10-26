@@ -3,10 +3,10 @@
 	     file in the release and its SHA-256 hash, the digest GitHub gives the file. build/check-release.py checks them against the
 	     release, and writes them again for a new tag. -->
 	<ItemGroup>
-		<VecturaDBExecutable Include="win-x64" Asset="chroma-windows-x64.exe" Sha256="af240e3f5e2d6e87af0c344775a9d069a2230e3a07424a4175cada886c0eeaf1" />
-		<VecturaDBExecutable Include="linux-x64" Asset="chroma-linux-x86_64" Sha256="1887fb046a428042a648a3e38b44e74f2e9da33152382ad25a6821ffd7d91323" />
-		<VecturaDBExecutable Include="linux-arm64" Asset="chroma-linux-aarch64" Sha256="51005f544021edf3faf6a5f2ddd087470a39d1daa5b303eb79f22f4bfb0cd528" />
-		<VecturaDBExecutable Include="osx-x64" Asset="chroma-macos-x64" Sha256="0310a7c38ebb9ddb39db9fc0826460240c208a0d8b62503a517618567e128c64" />
-		<VecturaDBExecutable Include="osx-arm64" Asset="chroma-macos-arm64" Sha256="6f7e8307a43f0b098816f4cc8db7a55e26f56fef5bbb104c22709520a1e128ae" />
+		<VecturaDBExecutable Include="win-x64" Asset="vecturadb-windows-x64.exe" Sha256="31312b1f342e6c5c80a71c8322ba5fe2cef74e5764f19b4c19df33ca5f9759a9" />
+		<VecturaDBExecutable Include="linux-x64" Asset="vecturadb-linux-x86_64" Sha256="381d6f8c3e25826b482aa6e81d007453f55bc7fe4d1a37bcc3b6299c2d42972e" />
+		<VecturaDBExecutable Include="linux-arm64" Asset="vecturadb-linux-aarch64" Sha256="becc7bf511e68abea9ec78221c3bcba8055e559334282e1621e94e90a03d92cb" />
+		<VecturaDBExecutable Include="osx-x64" Asset="vecturadb-macos-x64" Sha256="d1807f8705a678cd9e85adcf01143ca66bf9971e83eaa9af971c10a8c65beac7" />
+		<VecturaDBExecutable Include="osx-arm64" Asset="vecturadb-macos-arm64" Sha256="55ffcbdc5b4f707a22839b89d824f30ef8cab90eccc0a9b67117814c4cee01bb" />
 	</ItemGroup>
 </Project>

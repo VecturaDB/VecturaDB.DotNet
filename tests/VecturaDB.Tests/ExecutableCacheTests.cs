@@ -19,7 +19,7 @@ public class ExecutableCacheTests
 
 	private static Release ReleaseOf(byte[] content) => new("v9.9.9-test", new Dictionary<string, ReleaseFile>
 	{
-		[Rid] = new("chroma-linux-x86_64", Convert.ToHexString(SHA256.HashData(content)).ToLowerInvariant()),
+		[Rid] = new("vecturadb-linux-x86_64", Convert.ToHexString(SHA256.HashData(content)).ToLowerInvariant()),
 	});
 
 	private Task<string> GetAsync(Release release, Uri uri) =>
@@ -49,7 +49,7 @@ public class ExecutableCacheTests
 	{
 		await using var server = new FileServer("another file"u8.ToArray());
 		var e = Assert.ThrowsAsync<InvalidDataException>(() => GetAsync(ReleaseOf(Executable), server.Uri));
-		Assert.That(e!.Message, Does.Contain("SHA-256 hash").And.Contain(server.Uri + "chroma-linux-x86_64"));
+		Assert.That(e!.Message, Does.Contain("SHA-256 hash").And.Contain(server.Uri + "vecturadb-linux-x86_64"));
 		Assert.That(Directory.EnumerateFiles(Path.Combine(_root, "v9.9.9-test", Rid)).Select(Path.GetFileName), Is.EquivalentTo(new[] { ".lock" }));
 	}
 

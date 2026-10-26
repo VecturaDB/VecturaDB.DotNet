@@ -34,7 +34,8 @@ command.
 
 ## Versions
 
-The version of the tool is the one of VecturaDB, then a revision of the tool: 1.0.0-preview.3.1 runs VecturaDB 1.0.0-preview.3.
+The version of the tool is the one of VecturaDB that it runs: 1.0.0-preview.3.post1 runs VecturaDB 1.0.0-preview.3.post1. When only the
+tool changes, a revision follows, as 1.0.0-preview.3.post1.1.
 
 ## License
 

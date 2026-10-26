@@ -1,11 +1,12 @@
 <Project>
 	<PropertyGroup>
-		<!-- The release of VecturaDB whose executables the tool starts, then the revision of the tool for that release: 1.0.0-preview.3.1
-		     starts VecturaDB 1.0.0-preview.3. Tags v<version>. -->
-		<VecturaDBTag>v1.0.0-preview.3</VecturaDBTag>
+		<!-- The release of VecturaDB whose executables the tool starts. The version of the tool is the one of VecturaDB; a revision,
+		     .1 then .2, only when the tool changes and VecturaDB does not. Tags v<version>. -->
+		<VecturaDBTag>v1.0.0-preview.3.post1</VecturaDBTag>
 		<VecturaDBVersion>$(VecturaDBTag.TrimStart('v'))</VecturaDBVersion>
-		<ToolRevision>1</ToolRevision>
-		<Version>$(VecturaDBVersion).$(ToolRevision)</Version>
+		<ToolRevision></ToolRevision>
+		<Version>$(VecturaDBVersion)</Version>
+		<Version Condition="'$(ToolRevision)' != ''">$(VecturaDBVersion).$(ToolRevision)</Version>
 		<LangVersion>latest</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>

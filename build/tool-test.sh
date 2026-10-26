@@ -11,6 +11,7 @@ native() { if command -v cygpath >/dev/null; then cygpath -w "$1"; else echo "$1
 heartbeat() { curl -s -o /dev/null -w '%{http_code}' -m 2 "http://127.0.0.1:$port/api/v2/heartbeat"; }
 case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) windows=1; exe=.exe ;; *) windows=0; exe= ;; esac
 version=$(dotnet msbuild src/VecturaDB -getProperty:Version -nologo | tr -d '\r')
+server=$(dotnet msbuild src/VecturaDB -getProperty:VecturaDBVersion -nologo | tr -d '\r')
 mkdir -p artifacts && rm -rf artifacts/tools
 dotnet pack src/VecturaDB -c Release -nologo -v q > artifacts/tool-pack.log 2>&1; check "pack" "$?" 0
 dotnet tool install --tool-path artifacts/tools --add-source artifacts/packages VecturaDB --version "$version" > artifacts/tool-install.log 2>&1
@@ -18,7 +19,7 @@ check "dotnet tool install VecturaDB $version" "$?" 0
 tool=artifacts/tools/vecturadb$exe
 check "the command vecturadb" "$([ -f "$tool" ] && echo found || echo missing)" found
 VECTURADB_CACHE=$(native "$(pwd)/artifacts/test-cache"); export VECTURADB_CACHE
-check "vecturadb --version" "$("$tool" --version 2>/dev/null | tr -d '\r')" "chroma ${version%.*}"
+check "vecturadb --version says vecturadb" "$("$tool" --version 2>/dev/null | tr -d '\r')" "vecturadb $server"
 port=$((20000 + RANDOM % 20000))
 data=$(mktemp -d)
 "$tool" run --path "$(native "$data")" --host 127.0.0.1 --port $port > artifacts/tool-server.log 2>&1 & pid=$!

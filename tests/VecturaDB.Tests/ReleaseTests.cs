@@ -12,7 +12,7 @@ public class ReleaseTests
 		Assert.That(release.Tag, Is.EqualTo(TestMetadata.Value("VecturaDBTag")));
 		Assert.That(release.Files.Keys, Is.EquivalentTo(new[] { "win-x64", "linux-x64", "linux-arm64", "osx-x64", "osx-arm64" }));
 		Assert.That(release.Files.Values.Select(f => f.Sha256), Has.All.Match("^[0-9a-f]{64}$"));
-		Assert.That(release.Files.Values.Select(f => f.Asset), Has.All.StartWith("chroma-"));
+		Assert.That(release.Files.Values.Select(f => f.Asset), Has.All.StartWith("vecturadb-"));
 		Assert.That(release.DownloadUri.ToString(), Is.EqualTo($"https://github.com/VecturaDB/VecturaDB/releases/download/{release.Tag}/"));
 	}
 

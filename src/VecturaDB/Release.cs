@@ -43,5 +43,5 @@ internal sealed class Release
 	}
 }
 
-// A file of the release: its name, like chroma-linux-x86_64, and the SHA-256 hash of its content, in lower case.
+// A file of the release: its name, like vecturadb-linux-x86_64, and the SHA-256 hash of its content, in lower case.
 internal sealed record ReleaseFile(string Asset, string Sha256);
