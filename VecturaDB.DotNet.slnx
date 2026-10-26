@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/VecturaDB/VecturaDB.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ArgsEcho/ArgsEcho.csproj" />
+    <Project Path="tests/VecturaDB.Tests/VecturaDB.Tests.csproj" />
+  </Folder>
+</Solution>

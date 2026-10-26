@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- The tool vecturadb: the first run downloads the VecturaDB executable of its platform from the GitHub release of VecturaDB, checks
+	     its SHA-256 hash against Executables.props, keeps it in the cache of the user and runs it with the arguments of the command. -->
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RollForward>Major</RollForward>
+		<PackAsTool>true</PackAsTool>
+		<ToolCommandName>vecturadb</ToolCommandName>
+		<PackageId>VecturaDB</PackageId>
+		<RootNamespace>VecturaDB</RootNamespace>
+		<InvariantGlobalization>true</InvariantGlobalization>
+		<SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>icon.png</PackageIcon>
+		<PackageTags>vecturadb vector-database embeddings rag bm25 sparse-vectors search dotnet-tool</PackageTags>
+		<PackageReleaseNotes>https://github.com/VecturaDB/VecturaDB.DotNet/releases/tag/v$(Version)</PackageReleaseNotes>
+		<PackageDescription>VecturaDB $(VecturaDBVersion) as a .NET tool: the command vecturadb runs the VecturaDB server and CLI, without Python and without Docker. The first run downloads the executable of its platform from the GitHub release of VecturaDB, for Windows x64, Linux x64 and arm64 (glibc 2.17 and later), macOS x64 and arm64, and checks its SHA-256 hash. VecturaDB is an independent fork of Chroma, under the Apache License 2.0. The original code is copyright Chroma Inc. and its contributors. Not affiliated with, endorsed by or sponsored by Chroma Inc. CHROMA is a registered trademark of Chroma Inc., used here only to describe compatibility.</PackageDescription>
+	</PropertyGroup>
+	<Import Project="Executables.props" />
+	<ItemGroup>
+		<InternalsVisibleTo Include="VecturaDB.Tests" />
+		<None Include="$(MSBuildThisFileDirectory)..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
+		<None Include="$(MSBuildThisFileDirectory)..\..\icon.png" Pack="true" PackagePath="\" Visible="false" />
+		<None Include="$(MSBuildThisFileDirectory)..\..\NOTICE" Pack="true" PackagePath="\" Visible="false" />
+		<!-- The notices of VecturaDB at the tag of the release, which build/notices.sh writes before the pack. -->
+		<None Include="$(MSBuildThisFileDirectory)..\..\artifacts\notices\THIRD-PARTY-NOTICES.md" Condition="Exists('$(MSBuildThisFileDirectory)..\..\artifacts\notices\THIRD-PARTY-NOTICES.md')" Pack="true" PackagePath="\" Visible="false" />
+	</ItemGroup>
+	<!-- The release for the tool: the tag, and for each platform the file of the release and its SHA-256 hash, read by Release. -->
+	<ItemGroup>
+		<AssemblyMetadata Include="VecturaDB.Tag" Value="$(VecturaDBTag)" />
+	</ItemGroup>
+	<Target Name="AddVecturaDBExecutables" BeforeTargets="GetAssemblyAttributes">
+		<ItemGroup>
+			<AssemblyMetadata Include="VecturaDB.Asset:%(VecturaDBExecutable.Identity)" Value="%(VecturaDBExecutable.Asset)" />
+			<AssemblyMetadata Include="VecturaDB.Sha256:%(VecturaDBExecutable.Identity)" Value="%(VecturaDBExecutable.Sha256)" />
+		</ItemGroup>
+	</Target>
+	<Target Name="RequireNotices" BeforeTargets="GenerateNuspec" Condition="'$(RequireNotices)' == 'true'">
+		<Error Condition="!Exists('$(MSBuildThisFileDirectory)..\..\artifacts\notices\THIRD-PARTY-NOTICES.md')" Text="Missing artifacts/notices/THIRD-PARTY-NOTICES.md: run build/notices.sh." />
+	</Target>
+</Project>

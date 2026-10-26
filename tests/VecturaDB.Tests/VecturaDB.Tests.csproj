@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RollForward>Major</RollForward>
+		<IsPackable>false</IsPackable>
+		<IsTestProject>true</IsTestProject>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
+		<PackageReference Include="NUnit" Version="4.1.0" />
+		<PackageReference Include="NUnit3TestAdapter" Version="4.5.0" />
+		<PackageReference Include="NUnit.Analyzers" Version="4.2.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+	<ItemGroup>
+		<Using Include="NUnit.Framework" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\src\VecturaDB\VecturaDB.csproj" />
+		<ProjectReference Include="..\ArgsEcho\ArgsEcho.csproj" ReferenceOutputAssembly="false" />
+	</ItemGroup>
+	<!-- Where the tests find the tool and ArgsEcho as they are built, and the cache of VecturaDB that the runs of the tests share. -->
+	<ItemGroup>
+		<AssemblyMetadata Include="ToolPath" Value="$(MSBuildThisFileDirectory)..\..\src\VecturaDB\bin\$(Configuration)\net8.0\VecturaDB.dll" />
+		<AssemblyMetadata Include="ArgsEchoDirectory" Value="$(MSBuildThisFileDirectory)..\ArgsEcho\bin\$(Configuration)\net8.0\" />
+		<AssemblyMetadata Include="TestCache" Value="$(MSBuildThisFileDirectory)..\..\artifacts\test-cache" />
+		<AssemblyMetadata Include="VecturaDBTag" Value="$(VecturaDBTag)" />
+	</ItemGroup>
+</Project>

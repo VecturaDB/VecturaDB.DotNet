@@ -1,0 +1,23 @@
+<Project>
+	<PropertyGroup>
+		<!-- The release of VecturaDB whose executables the tool starts, then the revision of the tool for that release: 1.0.0-preview.3.1
+		     starts VecturaDB 1.0.0-preview.3. Tags v<version>. -->
+		<VecturaDBTag>v1.0.0-preview.3</VecturaDBTag>
+		<VecturaDBVersion>$(VecturaDBTag.TrimStart('v'))</VecturaDBVersion>
+		<ToolRevision>1</ToolRevision>
+		<Version>$(VecturaDBVersion).$(ToolRevision)</Version>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+		<Deterministic>true</Deterministic>
+		<ContinuousIntegrationBuild Condition="'$(GITHUB_ACTIONS)' == 'true'">true</ContinuousIntegrationBuild>
+		<Authors>The VecturaDB contributors</Authors>
+		<Copyright>Copyright 2026 The VecturaDB contributors</Copyright>
+		<RepositoryUrl>https://github.com/VecturaDB/VecturaDB.DotNet</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageProjectUrl>https://github.com/VecturaDB/VecturaDB.DotNet</PackageProjectUrl>
+		<PackageOutputPath>$(MSBuildThisFileDirectory)artifacts\packages</PackageOutputPath>
+		<RestorePackagesPath>$(MSBuildThisFileDirectory)artifacts\nuget-cache</RestorePackagesPath>
+	</PropertyGroup>
+</Project>

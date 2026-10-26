@@ -1,0 +1,12 @@
+<Project>
+	<!-- The executables of the GitHub release $(VecturaDBTag) of VecturaDB (Directory.Build.props): for each platform the name of the
+	     file in the release and its SHA-256 hash, the digest GitHub gives the file. build/check-release.py checks them against the
+	     release, and writes them again for a new tag. -->
+	<ItemGroup>
+		<VecturaDBExecutable Include="win-x64" Asset="chroma-windows-x64.exe" Sha256="af240e3f5e2d6e87af0c344775a9d069a2230e3a07424a4175cada886c0eeaf1" />
+		<VecturaDBExecutable Include="linux-x64" Asset="chroma-linux-x86_64" Sha256="1887fb046a428042a648a3e38b44e74f2e9da33152382ad25a6821ffd7d91323" />
+		<VecturaDBExecutable Include="linux-arm64" Asset="chroma-linux-aarch64" Sha256="51005f544021edf3faf6a5f2ddd087470a39d1daa5b303eb79f22f4bfb0cd528" />
+		<VecturaDBExecutable Include="osx-x64" Asset="chroma-macos-x64" Sha256="0310a7c38ebb9ddb39db9fc0826460240c208a0d8b62503a517618567e128c64" />
+		<VecturaDBExecutable Include="osx-arm64" Asset="chroma-macos-arm64" Sha256="6f7e8307a43f0b098816f4cc8db7a55e26f56fef5bbb104c22709520a1e128ae" />
+	</ItemGroup>
+</Project>

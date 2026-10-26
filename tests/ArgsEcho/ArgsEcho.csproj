@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- An executable for the tests in place of VecturaDB, with VECTURADB_EXECUTABLE: it prints each argument it gets, and ends with the
+	     exit code 7. -->
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+		<RollForward>Major</RollForward>
+		<IsPackable>false</IsPackable>
+		<InvariantGlobalization>true</InvariantGlobalization>
+	</PropertyGroup>
+</Project>

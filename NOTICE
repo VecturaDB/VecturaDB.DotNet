@@ -1,0 +1,5 @@
+VecturaDB for .NET
+Copyright 2026 The VecturaDB contributors
+
+The command vecturadb runs VecturaDB (https://github.com/VecturaDB/VecturaDB), which it downloads from the GitHub release of
+VecturaDB. The notices of VecturaDB are in THIRD-PARTY-NOTICES.md.
